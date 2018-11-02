@@ -1,0 +1,25 @@
+{
+    "name": "shippinno/email",
+    "type": "library",
+    "require": {
+        "php": ">=7.1",
+        "swiftmailer/swiftmailer": "^6.1",
+        "tanigami/value-objects": "^0.4.6",
+        "psr/log": "^1.0",
+        "egulias/email-validator": "^2.1",
+        "mockery/mockery": "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shippinno\\Email\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Shippinno\\Email\\": "tests/"
+        }
+    }
+}
