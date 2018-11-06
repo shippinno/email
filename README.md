@@ -17,8 +17,9 @@ Use a `SendEmail` to send an `Email`. It reattempts to send if `$maxReattempts` 
 ```php
 use Shippinno\Email\SwiftMailer\SwiftMailerSendEmail;
 use Tanigami\ValueObjects\Web\Email;
+use Swift_Mailer;
 
-$sendEmail = new SwiftMailerSendEmail();
+$sendEmail = new SwiftMailerSendEmail(new Swift_Mailer(...));
 $sendEmail->execute(
     new Email(...),
     3 // max reattempts
