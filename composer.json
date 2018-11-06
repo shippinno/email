@@ -6,11 +6,11 @@
         "swiftmailer/swiftmailer": "^6.1",
         "tanigami/value-objects": "^0.4.6",
         "psr/log": "^1.0",
-        "egulias/email-validator": "^2.1",
-        "mockery/mockery": "^1.2"
+        "egulias/email-validator": "^2.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.4"
+        "phpunit/phpunit": "^7.4",
+        "mockery/mockery": "^1.2"
     },
     "autoload": {
         "files": ["src/SwiftMailer/functions_include.php"],
