@@ -5,10 +5,14 @@ namespace Shippinno\Email\SwiftMailer {
 
     use Swift_DependencyContainer;
 
-    function register_swift_non_rfc_email_validator()
+    function allow_non_rfc_email_address()
     {
-        Swift_DependencyContainer::getInstance()
+        $container = Swift_DependencyContainer::getInstance();
+        $container
             ->register('email.validator')
             ->asSharedInstanceOf(NonRFCEmailValidator::class);
+        $container
+            ->register('mime.grammar')
+            ->asSharedInstanceOf(NonRFCMimeGrammer::class);
     }
 }

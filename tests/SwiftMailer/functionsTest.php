@@ -9,9 +9,9 @@ class functionsTest extends TestCase
 {
     public function testAllowingNonRFCEmailAddress()
     {
-        register_swift_non_rfc_email_validator();
+        allow_non_rfc_email_address();
         $message = new Swift_Message;
-        $message->setTo('email..@example.com');
+        $message->setTo('email..@docomo.ne.jp');
         $this->assertTrue(true);
     }
 }

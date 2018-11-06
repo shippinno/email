@@ -3,7 +3,7 @@
     "type": "library",
     "require": {
         "php": ">=7.1",
-        "swiftmailer/swiftmailer": "^6.1",
+        "swiftmailer/swiftmailer": "^5.3",
         "tanigami/value-objects": "^0.4.6",
         "psr/log": "^1.0",
         "egulias/email-validator": "^2.1"

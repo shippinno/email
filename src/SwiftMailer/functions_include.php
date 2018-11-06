@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
 
-if (!function_exists('Shippinno\Email\SwiftMailer\register_swift_non_rfc_email_validator')) {
+if (!function_exists('Shippinno\Email\SwiftMailer\allow_non_rfc_email_address')) {
     require __DIR__ . '/functions.php';
 }
