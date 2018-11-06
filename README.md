@@ -17,20 +17,33 @@ Use a `SendEmail` to send an `Email`. It reattempts to send if `$maxReattempts` 
 ```php
 use Shippinno\Email\SwiftMailer\SwiftMailerSendEmail;
 use Tanigami\ValueObjects\Web\Email;
+use Swift_Mailer;
 
-$sendEmail = new SwiftMailerSendEmail();
+$sendEmail = new SwiftMailerSendEmail(new Swift_Mailer(...));
 $sendEmail->execute(
     new Email(...),
     3 // max reattempts
 );
 ```
 
-### Let Swift Mailer allow non RFC email address
+### Dealing with non RFC email address
 
-You can set a custom email validator allowing non RFC email address (e.g. `email..@example.com`) by calling `init_swift_with_non_rfc_email_validator()` function.
+#### Swift Mailer
+
+Swift Mailer rejects Non RFC compliant email addresses by default. You can set a custom email validator allowing non RFC email address (e.g. `email..@example.com`) by calling `register_swift_non_rfc_email_validator()` function.
 
 ```php
-use function Shippinno\Email\SwiftMailer\init_swift_with_non_rfc_email_validator;
+use function Shippinno\Email\SwiftMailer\register_swift_non_rfc_email_validator;
 
-init_swift_with_non_rfc_email_validator();
+register_swift_non_rfc_email_validator();
+(new Swift_Message)->setTo('email..@example.com'); // => OK
+```
+
+#### `EmailAddress` object
+
+`EmailAddress` requires its value to be RFC compliant by default. You can have it soft validate by setting the second attribute of the constructor to `true`.
+
+```php
+new EmailAddress('email..@example.com') // => InvalidArgumentException
+new EmailAddress('email..@example.com', true); // => OK
 ```
