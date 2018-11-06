@@ -11,7 +11,7 @@ class functionsTest extends TestCase
     {
         register_swift_non_rfc_email_validator();
         $message = new Swift_Message;
-        $message->setTo('from..@example.com');
+        $message->setTo('email..@example.com');
         $this->assertTrue(true);
     }
 }
