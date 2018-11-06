@@ -21,4 +21,11 @@ class NonRFCEmailValidatorTest extends TestCase
         $validator = new NonRFCEmailValidator;
         $this->assertFalse($validator->isValid('ThisIsNotEmailAddressAtAll', $validation));
     }
+
+    public function testItDisallowsTotallyWrongEmailAddress2()
+    {
+        $validation = Mockery::mock(EmailValidation::class);
+        $validator = new NonRFCEmailValidator;
+        $this->assertFalse($validator->isValid('ThisIsNot@EmailAddress@AtAll', $validation));
+    }
 }
