@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Shippinno\Email\SwiftMailer;
 
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Shippinno\Email\EmailNotSentException;
 use Shippinno\Email\SendEmail;
 use Shippinno\Email\SmtpConfiguration;
@@ -13,14 +11,12 @@ use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
-use Swift_TransportException;
 use Tanigami\ValueObjects\Web\Email;
 use Tanigami\ValueObjects\Web\EmailAddress;
+use Throwable;
 
-class SwiftMailerSendEmail implements SendEmail
+class SwiftMailerSendEmail extends SendEmail
 {
-    use LoggerAwareTrait;
-
     /**
      * @var Swift_Mailer
      */
@@ -29,30 +25,30 @@ class SwiftMailerSendEmail implements SendEmail
     /**
      * @var bool
      */
-    private $appliesSmtpConfiguration;
+    private $ignoresSmtpConfiguration;
 
     /**
      * @param Swift_Mailer $defaultMailer
-     * @param bool $appliesSmtpConfiguration
+     * @param bool $ignoresSmtpConfiguration
      * @param LoggerInterface|null $logger
      */
     public function __construct(
         Swift_Mailer $defaultMailer,
-        bool $appliesSmtpConfiguration,
+        bool $ignoresSmtpConfiguration = false,
         LoggerInterface $logger = null
     ) {
         $this->defaultMailer = $defaultMailer;
-        $this->appliesSmtpConfiguration = $appliesSmtpConfiguration;
-        $this->setLogger(is_null($logger) ? new NullLogger : $logger);
+        $this->ignoresSmtpConfiguration = $ignoresSmtpConfiguration;
+        parent::__construct($logger);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function execute(Email $email, SmtpConfiguration $smtpConfiguration = null): int
+    protected function doExecute(Email $email, SmtpConfiguration $smtpConfiguration = null): int
     {
         $mailer = $this->defaultMailer;
-        if ($this->appliesSmtpConfiguration && !is_null($smtpConfiguration)) {
+        if (!$this->ignoresSmtpConfiguration && !is_null($smtpConfiguration)) {
             $mailer = $this->smtpConfiguredMailer($smtpConfiguration);
         }
         $message = (new Swift_Message)
@@ -88,7 +84,7 @@ class SwiftMailerSendEmail implements SendEmail
                 'subject' => $message->getSubject(),
                 'body' => $message->getBody(),
             ]);
-        } catch (Swift_TransportException $e) {
+        } catch (Throwable $e) {
             throw new EmailNotSentException($failedRecipients, $e);
         }
 

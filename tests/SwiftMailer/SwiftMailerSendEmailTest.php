@@ -2,6 +2,7 @@
 
 namespace Shippinno\Email\SwiftMailer;
 
+use Exception;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -44,36 +45,7 @@ class SwiftMailerSendEmailTest extends TestCase
             })
             ->once()
             ->andReturn(6);
-        $sendEmail = new SwiftMailerSendEmail($mailer, false);
-        $sendEmail->execute($email);
-    }
-
-    /**
-     * @expectedException \Shippinno\Email\EmailNotSentException
-     * @expectedExceptionMessage to2@example.com, to3@example.com
-     */
-    public function testItThrowsExceptionIfPartiallyFailedToSend()
-    {
-        $email = new Email(
-            'SUBJECT',
-            'BODY',
-            new EmailAddress('from@example.com'),
-            [
-                new EmailAddress('to1@example.com'),
-                new EmailAddress('to2@example.com'),
-                new EmailAddress('to3@example.com'),
-            ]
-        );
-        $mailer = Mockery::mock(Swift_Mailer::class);
-        $mailer
-            ->shouldReceive('send')
-            ->withArgs(function (\Swift_Message $message, array &$a) {
-                $a = ['to2@example.com', 'to3@example.com'];
-                return true;
-            })
-            ->once()
-            ->andReturn(1);
-        $sendEmail = new SwiftMailerSendEmail($mailer, false);
+        $sendEmail = new SwiftMailerSendEmail($mailer);
         $sendEmail->execute($email);
     }
 
@@ -81,7 +53,7 @@ class SwiftMailerSendEmailTest extends TestCase
      * @expectedException \Shippinno\Email\EmailNotSentException
      * @expectedExceptionMessage
      */
-    public function testItThrowsExceptionIfErrorOccurredToTranportSubsystem()
+    public function testItThrowsExceptionIfErrorOccurs()
     {
         $email = new Email(
             'subject',
@@ -93,8 +65,8 @@ class SwiftMailerSendEmailTest extends TestCase
         $mailer
             ->shouldReceive('send')
             ->once()
-            ->andThrow(new Swift_TransportException(''));
-        $sendEmail = new SwiftMailerSendEmail($mailer, false);
+            ->andThrow(new Exception);
+        $sendEmail = new SwiftMailerSendEmail($mailer);
         $sendEmail->execute($email);
     }
 
