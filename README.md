@@ -1,5 +1,9 @@
 # Email
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/shippinno/email/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/shippinno/email/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/shippinno/email/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/shippinno/email/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/shippinno/email/badges/build.png?b=master)](https://scrutinizer-ci.com/g/shippinno/email/build-status/master)
+
 ## Installation
 
 ```sh
