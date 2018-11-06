@@ -14,12 +14,12 @@ class EmailNotSentException extends Exception
     private $recipients;
 
     /**
-     * @param string[] $recipients
+     * @param array|null $recipients
      * @param Throwable|null $previous
      */
-    public function __construct(array $recipients = [], Throwable $previous = null)
+    public function __construct(?array $recipients = [], Throwable $previous = null)
     {
-        $this->recipients = $recipients;
+        $this->recipients = is_null($recipients) ? [] : $recipients;
         $message = 'Failed to send email.';
         if (count($recipients) > 0) {
             $message .= ' Recipients: ' . implode(', ', $this->recipients());

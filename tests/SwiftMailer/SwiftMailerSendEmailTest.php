@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Shippinno\Email\SmtpConfiguration;
 use Swift_Mailer;
-use Swift_TransportException;
 use Tanigami\ValueObjects\Web\Email;
 use Tanigami\ValueObjects\Web\EmailAddress;
 use Tanigami\ValueObjects\Web\EmailAttachment;
