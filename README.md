@@ -43,7 +43,7 @@ allow_non_rfc_email_address();
 
 #### `EmailAddress` object
 
-`EmailAddress` requires its value to be RFC compliant by default. You can have it soft validate by setting the second attribute of the constructor to `true`.
+`Tanigami\ValueObjects\Web\EmailAddress` requires its value to be RFC compliant by default. You can have it soft validate by setting the second attribute of the constructor to `true`.
 
 ```php
 new EmailAddress('email..@example.com') // => InvalidArgumentException
