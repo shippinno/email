@@ -30,18 +30,20 @@ $sendEmail->execute(
 
 #### Swift Mailer
 
-Swift Mailer rejects Non RFC compliant email addresses by default. You can set a custom email validator allowing non RFC email address (e.g. `email..@example.com`) by calling `register_swift_non_rfc_email_validator()` function.
+Swift Mailer rejects Non RFC compliant email addresses by default.
+
+You can set a custom email validator and Mime grammer (for Swift Mailer 5.x compatibility) allowing non RFC email address (e.g. `email.@example.com`) by calling `allow_non_rfc_email_address();` function.
 
 ```php
 use function Shippinno\Email\SwiftMailer\register_swift_non_rfc_email_validator;
 
-register_swift_non_rfc_email_validator();
-(new Swift_Message)->setTo('email..@example.com'); // => OK
+allow_non_rfc_email_address();
+(new Swift_Message)->setTo('email.@example.com'); // => OK
 ```
 
 #### `EmailAddress` object
 
-`EmailAddress` requires its value to be RFC compliant by default. You can have it soft validate by setting the second attribute of the constructor to `true`.
+`Tanigami\ValueObjects\Web\EmailAddress` requires its value to be RFC compliant by default. You can have it soft validate by setting the second attribute of the constructor to `true`.
 
 ```php
 new EmailAddress('email..@example.com') // => InvalidArgumentException
