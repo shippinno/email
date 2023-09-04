@@ -5,8 +5,8 @@
         "php": ">=7.1",
         "swiftmailer/swiftmailer": "^5.3|^6.0",
         "tanigami/value-objects": "^0.4.6",
-        "psr/log": "^1.0",
-        "egulias/email-validator": "^2.1"
+        "psr/log": "^3.0",
+        "egulias/email-validator": "^4.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.4",
