@@ -54,5 +54,5 @@ abstract class SendEmail
      * @return int
      * @throws EmailNotSentException
      */
-    abstract protected function doExecute(Email $email, SmtpConfiguration $smtpConfiguration = null): int;
+    abstract protected function doExecute(Email $email, SmtpConfiguration $smtpConfiguration = null);
 }
