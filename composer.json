@@ -1,19 +1,26 @@
 {
     "name": "shippinno/email",
     "type": "library",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:shippinno/value-objects-php.git",
+            "no-api": true
+        }
+    ],
     "require": {
         "php": ">=7.1",
         "symfony/mailer": "^5.3|^6.0",
-        "tanigami/value-objects": "^0.4.6",
+        "symfony/dependency-injection": "^5.3|^6.0",
+        "tanigami/value-objects": "dev-develop",
         "psr/log": "^1.0|^2.0|^3.0",
         "egulias/email-validator": "^2.1|^3.0|^4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.4",
-        "mockery/mockery": "^1.2"
+        "mockery/mockery": "^1.2",
+        "phpunit/phpunit": "^10.1"
     },
     "autoload": {
-        "files": ["src/SwiftMailer/functions_include.php"],
         "psr-4": {
             "Shippinno\\Email\\": "src/"
         }

@@ -7,6 +7,8 @@ use Psr\Log\LoggerInterface;
 use Shippinno\Email\EmailNotSentException;
 use Shippinno\Email\SendEmail;
 use Shippinno\Email\SmtpConfiguration;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mime\Address;
 use Tanigami\ValueObjects\Web\Email;
 use Tanigami\ValueObjects\Web\EmailAddress;
 use Throwable;
@@ -43,29 +45,43 @@ class SymfonyMailerSendEmail extends SendEmail
     /**
      * {@inheritdoc}
      */
-    protected function doExecute(Email $email, SmtpConfiguration $smtpConfiguration = null)
+    protected function doExecute(Email $email, SmtpConfiguration $smtpConfiguration = null): int
     {
         $mailer = $this->defaultMailer;
-        // if (!$this->ignoresSmtpConfiguration && !is_null($smtpConfiguration)) {
-        //     $mailer = $this->smtpConfiguredMailer($smtpConfiguration);
-        // }
+        if (false === $this->ignoresSmtpConfiguration && null !== $smtpConfiguration) {
+            $mailer = $this->smtpConfiguredMailer($smtpConfiguration);
+        }
         $message = (new MimeEmail)
             ->subject($email->subject())
             ->from($email->from()->emailAddress())
-            ->text($email->body(), 'text/plain');
+            ->text($email->body())
+            ->to(...array_map(function (EmailAddress $emailAddress) {
+                return $emailAddress->emailAddress();
+            }, $email->tos()))
+            ->cc(...array_map(function (EmailAddress $emailAddress) {
+                return $emailAddress->emailAddress();
+            }, $email->ccs()))
+            ->bcc(...array_map(function (EmailAddress $emailAddress) {
+                return $emailAddress->emailAddress();
+            }, $email->bccs()));
+        foreach ($email->attachments() as $attachment) {
+            $message->attach($attachment->content(), $attachment->fileName(), $attachment->mimeType());
+        }
 
         try {
-            $sent = $mailer->send($message);
+            $mailer->send($message);
             $this->logger->debug('An email was successfully sent.', [
-                'to' => implode(', ', $message->getTo()),
+                'to' => implode(', ', array_map(function (Address $address) {
+                    return $address->toString();
+                }, $message->getTo())),
                 'subject' => $message->getSubject(),
                 'body' => $message->getBody(),
             ]);
-        } catch (Throwable $e) {
-            throw new EmailNotSentException();
-        }
 
-        return $sent;
+            return $this->countRecipientsOfEmail($email);
+        } catch (Throwable $e) {
+            throw new EmailNotSentException([$e->getMessage()], $e);
+        }
     }
 
     /**
@@ -81,12 +97,12 @@ class SymfonyMailerSendEmail extends SendEmail
      * @param SmtpConfiguration $smtpConfiguration
      * @return Mailer
      */
-    // protected function smtpConfiguredMailer(SmtpConfiguration $smtpConfiguration): Mailer
-    // {
-    //     return new Mailer(
-    //         (new Swift_SmtpTransport($smtpConfiguration->host(), $smtpConfiguration->port()))
-    //             ->setUsername($smtpConfiguration->username())
-    //             ->setPassword($smtpConfiguration->password())
-    //     );
-    // }
+    protected function smtpConfiguredMailer(SmtpConfiguration $smtpConfiguration): Mailer
+    {
+        return new Mailer(
+            (new EsmtpTransport($smtpConfiguration->host(), $smtpConfiguration->port()))
+                ->setUsername($smtpConfiguration->username())
+                ->setPassword($smtpConfiguration->password())
+        );
+    }
 }

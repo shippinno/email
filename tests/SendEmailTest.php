@@ -8,6 +8,7 @@ use Tanigami\ValueObjects\Web\EmailAddress;
 
 class SendEmailTest extends TestCase
 {
+    /** @test */
     public function testItReattempts()
     {
         $email = new Email(
