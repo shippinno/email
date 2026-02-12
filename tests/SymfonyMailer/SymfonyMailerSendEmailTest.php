@@ -111,10 +111,13 @@ class SymfonyMailerSendEmailTest extends TestCase
     }
 
     /** @test */
-    public function testNonRFCEmailAddressThrowsException()
+    public function testAllowingNonRFCEmailAddress()
     {
-        $this->expectException(\Symfony\Component\Mime\Exception\RfcComplianceException::class);
+        // Trigger the bypass by instantiating the class
+        new SymfonyMailerSendEmail(Mockery::mock(MailerInterface::class)); 
+
         $message = new MimeEmail;
         $message->to('email..@docomo.ne.jp');
+        $this->assertTrue(true);
     }
 }

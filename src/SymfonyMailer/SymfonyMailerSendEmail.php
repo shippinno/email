@@ -12,6 +12,9 @@ use Symfony\Component\Mime\Address;
 use Tanigami\ValueObjects\Web\Email;
 use Tanigami\ValueObjects\Web\EmailAddress;
 use Throwable;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\EmailValidation;
+use ReflectionProperty;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email as MimeEmail;
@@ -41,6 +44,19 @@ class SymfonyMailerSendEmail extends SendEmail
         $this->defaultMailer = $defaultMailer;
         $this->ignoresSmtpConfiguration = $ignoresSmtpConfiguration;
         parent::__construct($logger);
+
+        $this->allowInvalidEmailAddresses();
+    }
+
+    private function allowInvalidEmailAddresses(): void
+    {
+        $reflection = new ReflectionProperty(Address::class, 'validator');
+        $reflection->setValue(null, new class extends EmailValidator {
+            public function isValid(string $email, EmailValidation $emailValidation): bool
+            {
+                return true;
+            }
+        });
     }
 
     /**
