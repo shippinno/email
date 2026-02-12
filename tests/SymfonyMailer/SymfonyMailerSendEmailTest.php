@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Shippinno\Email\SmtpConfiguration;
 use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as MimeEmail;
@@ -37,7 +38,7 @@ class SymfonyMailerSendEmailTest extends TestCase
             [new EmailAttachment('c,s,v,1', 'file.csv'), new EmailAttachment('<p>Hello</p>', 'file.html')]
         );
 
-        $mailer = Mockery::mock(Mailer::class);
+        $mailer = Mockery::mock(MailerInterface::class);
         $mailer
             ->shouldReceive('send')
             ->withArgs(function (MimeEmail $message) {
@@ -75,7 +76,7 @@ class SymfonyMailerSendEmailTest extends TestCase
             new EmailAddress('from@example.com'),
             [new EmailAddress('to@example.com')]
         );
-        $mailer = Mockery::mock(Mailer::class);
+        $mailer = Mockery::mock(MailerInterface::class);
         $mailer
             ->shouldReceive('send')
             ->once()
@@ -87,7 +88,7 @@ class SymfonyMailerSendEmailTest extends TestCase
     /** @test */
     public function testItCreatesSmtpConfiguredMailer()
     {
-        $mailer = Mockery::mock(Mailer::class);
+        $mailer = Mockery::mock(MailerInterface::class);
         $sendEmail = new SymfonyMailerSendEmail($mailer, false);
         $class = new ReflectionClass(get_class($sendEmail));
         $method = $class->getMethod('smtpConfiguredMailer');
@@ -110,10 +111,10 @@ class SymfonyMailerSendEmailTest extends TestCase
     }
 
     /** @test */
-    public function testAllowingNonRFCEmailAddress()
+    public function testNonRFCEmailAddressThrowsException()
     {
+        $this->expectException(\Symfony\Component\Mime\Exception\RfcComplianceException::class);
         $message = new MimeEmail;
         $message->to('email..@docomo.ne.jp');
-        $this->assertTrue(true);
     }
 }

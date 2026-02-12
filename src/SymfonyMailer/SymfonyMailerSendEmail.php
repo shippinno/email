@@ -13,12 +13,13 @@ use Tanigami\ValueObjects\Web\Email;
 use Tanigami\ValueObjects\Web\EmailAddress;
 use Throwable;
 use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email as MimeEmail;
 
 class SymfonyMailerSendEmail extends SendEmail
 {
     /**
-     * @var Mailer
+     * @var MailerInterface
      */
     private $defaultMailer;
 
@@ -28,12 +29,12 @@ class SymfonyMailerSendEmail extends SendEmail
     private $ignoresSmtpConfiguration;
 
     /**
-     * @param Mailer $defaultMailer
+     * @param MailerInterface $defaultMailer
      * @param bool $ignoresSmtpConfiguration
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        Mailer $defaultMailer,
+        MailerInterface $defaultMailer,
         bool $ignoresSmtpConfiguration = false,
         LoggerInterface $logger = null
     ) {
@@ -95,9 +96,9 @@ class SymfonyMailerSendEmail extends SendEmail
 
     /**
      * @param SmtpConfiguration $smtpConfiguration
-     * @return Mailer
+     * @return MailerInterface
      */
-    protected function smtpConfiguredMailer(SmtpConfiguration $smtpConfiguration): Mailer
+    protected function smtpConfiguredMailer(SmtpConfiguration $smtpConfiguration): MailerInterface
     {
         return new Mailer(
             (new EsmtpTransport($smtpConfiguration->host(), $smtpConfiguration->port()))
