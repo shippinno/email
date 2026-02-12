@@ -8,7 +8,7 @@ RUN apk add tzdata && \
     apk del tzdata
 
 RUN apk add --update linux-headers icu-dev
-RUN pecl install xdebug-3.2.2
+RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 RUN docker-php-ext-install intl
 
